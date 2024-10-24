@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ungkapan Perasaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff4b6e;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            color: #ff4b6e;
+            font-size: 50px;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-yes {
+            background: #ff4b6e;
+            color: white;
+        }
+
+        .btn-no {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .responses {
+            margin-top: 20px;
+            font-style: italic;
+            color: #666;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hai Kamu...</h1>
+        <div class="heart">❤️</div>
+        <div class="message" id="message">
+            Sudah lama aku memendam perasaan ini...<br>
+            Maukah kamu menjadi pasangan hidupku?
+        </div>
+        <div class="buttons">
+            <button class="btn btn-yes" onclick="showResponse(true)">Ya, Aku Mau</button>
+            <button class="btn btn-no" onclick="moveButton(this)" onmouseover="moveButton(this)">Tidak</button>
+        </div>
+        <div class="responses" id="responseText"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('message').style.display = 'block';
+            }, 1000);
+        });
+
+        function moveButton(button) {
+            const container = document.querySelector('.container');
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+            
+            const maxX = containerRect.width - buttonRect.width;
+            const maxY = containerRect.height - buttonRect.height;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            button.style.position = 'absolute';
+            button.style.left = `${randomX}px`;
+            button.style.top = `${randomY}px`;
+        }
+
+        let responseCount = 0;
+        const responses = [
+            "Yeay! Aku sangat bahagia! ❤️",
+            "Kamu membuat hariku menjadi sempurna! 😊",
+            "Aku janji akan selalu menyayangimu! 💑",
+            "Mari kita jalani kehidupan yang indah bersama! 💕"
+        ];
+
+        function showResponse(accepted) {
+            if (accepted && responseCount < responses.length) {
+                const responseDiv = document.getElementById('responseText');
+                responseDiv.style.display = 'block';
+                responseDiv.textContent = responses[responseCount];
+                responseCount++;
+                
+                if (responseCount === 1) {
+                    // Tambahkan efek konfeti saat respons pertama
+                    createConfetti();
+                }
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = `hsl(${Math.random() * 360}deg, 100%, 50%)`;
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                document.body.appendChild(confetti);
+
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+
+        // Tambahkan style untuk animasi konfeti
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                from {
+                    transform: translateY(-100vh) rotate(0deg);
+                }
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
